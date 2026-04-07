@@ -1,0 +1,2 @@
+;; Logseq graph-local settings (optional). App-wide settings stay in Flatpak config Logseq/configs.edn.
+{}
