@@ -1,0 +1,10 @@
+# Generated deploy reports (optional to commit)
+results/
+
+# Never commit API key files from AI tool homes
+**/api-keys.env
+
+# Obsidian plugin build trees
+**/node_modules/
+
+.DS_Store
