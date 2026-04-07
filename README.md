@@ -25,7 +25,7 @@ After clone on a new machine, run **`scripts/wire-z-env-symlinks.sh`** so **`~/z
 ## Logseq graph
 
 1. Install Logseq (this machine: Flatpak `com.logseq.Logseq` from Flathub).
-2. In Logseq: **Add new graph** → pick the **`logseq/`** directory inside this repository (the folder that contains `pages/`, `journals/`, and `logseq/config.edn`).
+2. Run **`scripts/wire-logseq-graph.sh`** (prints steps and opens the graph folder), **or** in Logseq: **Add new graph** → open the **`logseq/`** directory inside this repository (the folder that contains `pages/`, `journals/`, and `logseq/config.edn`).
 3. Optional: enable Git in Logseq settings if you want the app to commit; or manage commits yourself from the repo root.
 
 Graph root: `logseq/` (not the repository root).

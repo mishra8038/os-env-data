@@ -38,13 +38,23 @@ This is the full content at capture time (no secrets observed in this file):
 
 ## Graph location (this repo)
 
-Open in Logseq as graph root:
+Canonical path on this layout (clone at `~/z/env/os-env-data`):
 
 ```text
-<path-to-repo>/logseq/
+~/z/env/os-env-data/logseq/
 ```
 
 That directory must contain `pages/`, `journals/`, and `logseq/config.edn` (see repo layout).
+
+### Wire Logseq to this graph (one-time in the app)
+
+Logseq (Flatpak) does **not** reliably open a folder graph from the command line. After install:
+
+1. Run **`scripts/wire-logseq-graph.sh`** from this repo (opens the folder in the file manager and prints these steps).
+2. In Logseq: click the **graph name** (bottom of the left sidebar) → **All graphs** → **Add new graph** / **Open a local directory**.
+3. Select **`~/z/env/os-env-data/logseq`** (the folder that directly contains `pages/`, `journals/`, `logseq/`).
+
+Your previous graph (e.g. under `~/z/prs/logseq/...`) stays in the list; switch graphs from the same menu anytime.
 
 ## Non-Flatpak Linux (reference)
 
