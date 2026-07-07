@@ -1,31 +1,33 @@
 #!/usr/bin/env bash
-# Idempotent: ensure ~/z/env/ai and ~/z/env/obsidian point at this repo's trees.
-# Safe if those paths are already correct symlinks. Refuses to replace real directories.
+# Idempotent: ensure ~/z/env/ai points at this repo's ai/ tree when present.
+# Obsidian: ~/z/kb/personal/pkb-obsidian-vault-template (not this repo).
 set -u
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 Z_ENV="${Z_ENV_ROOT:-$HOME/z/env}"
 TARGET_AI="$REPO_ROOT/ai"
-TARGET_OBS="$REPO_ROOT/obsidian"
+COMPAT_OS_DATA="${COMPAT_OS_DATA:-$Z_ENV/os/os-env-data}"
 
 log() { printf '[wire-z-env] %s\n' "$*"; }
 
-link_one() {
-  local name="$1" target="$2"
-  local linkpath="$Z_ENV/$name"
-  mkdir -p "$Z_ENV" 2>/dev/null || true
-  if [ ! -d "$target" ]; then
-    log "Skip: $target does not exist (create or clone content first)"
-    return 0
+if [ ! -d "$TARGET_AI" ]; then
+  log "Skip: $TARGET_AI does not exist (create locally or restore ai/ tree)"
+else
+  if [ -e "$Z_ENV/ai" ] && [ ! -L "$Z_ENV/ai" ]; then
+    log "Refuse: $Z_ENV/ai exists and is not a symlink; merge into $TARGET_AI then re-run"
+    exit 1
   fi
-  if [ -e "$linkpath" ] && [ ! -L "$linkpath" ]; then
-    log "Refuse: $linkpath exists and is not a symlink; move it into $target then re-run"
-    return 1
-  fi
-  ln -sfn "$target" "$linkpath"
-  log "OK: $linkpath -> $target"
-}
+  ln -sfn "$TARGET_AI" "$Z_ENV/ai"
+  log "OK: $Z_ENV/ai -> $TARGET_AI"
+fi
 
-link_one ai "$TARGET_AI" || exit 1
-link_one obsidian "$TARGET_OBS" || exit 1
+mkdir -p "$(dirname "$COMPAT_OS_DATA")" 2>/dev/null || true
+if [ -e "$COMPAT_OS_DATA" ] && [ ! -L "$COMPAT_OS_DATA" ]; then
+  log "Skip compat: $COMPAT_OS_DATA exists and is not a symlink"
+else
+  ln -sfn "$REPO_ROOT" "$COMPAT_OS_DATA"
+  log "OK: $COMPAT_OS_DATA -> $REPO_ROOT"
+fi
+
+log "Obsidian template: ~/z/kb/personal/pkb-obsidian-vault-template"
 log "Done."

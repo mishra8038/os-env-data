@@ -8,3 +8,21 @@ results/
 **/node_modules/
 
 .DS_Store
+
+# ── Local-only trees (on disk; not portable git content) ─────────────────────
+# AI tool homes symlinked from ~/z/env/ai — large, machine-specific
+ai/
+
+# Obsidian vaults/templates → pkb-obsidian-vault-template repo
+obsidian/
+
+# Session scratch
+.chat/
+
+# Runtime caches and databases
+**/.ai/local-context/
+**/embedding-cache.json
+**/*.sqlite
+**/*.sqlite-wal
+**/*.sqlite-shm
+ai/codex/.tmp/
