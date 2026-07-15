@@ -11,9 +11,11 @@ Portable, cross-machine **personal environment** data: Logseq graph(s), reproduc
 
 This repo is intentionally **separate** from **`sys-restore`** so personal journals do not bloat restore PRs. Layout: `~/z/env/sys-restore/docs/Z_LAYOUT.md` · reorg: `docs/reorg-1/`.
 
-**Not in this repo (by design):**
-- **`ai/`** — local tool homes under `~/z/env/ai/` (symlink target on disk; gitignored)
-- **Obsidian templates** — `~/z/kb/personal/pkb-obsidian-vault-template`
+**Not the live AI registry:**
+- **`~/z/env/ai/`** — canonical live AI registry + stack checkouts (real directory)
+- **`ai/` here** — redirect stub only (2026-07-15). Former shadow tree archived under
+  `~/z/data/archive/sys-env-data-ai-*`. Do not recreate agent homes here.
+- **Obsidian** — under `obsidian/` in this checkout / `sys-obsidian-vault-template`
 
 ## Deployment boundary
 
@@ -29,7 +31,8 @@ This repo is intentionally **separate** from **`sys-restore`** so personal journ
 | `profiles/` | Reproduction notes (sanitized) |
 | `scripts/` | On-demand deploy + `wire-z-env-symlinks.sh` |
 
-After clone, run **`scripts/wire-z-env-symlinks.sh`** so **`~/z/env/ai`** points at this repo's local `ai/` tree (when present).
+After clone, run **`scripts/wire-z-env-symlinks.sh`** for compat links only — it will
+**not** replace `~/z/env/ai` with this repo’s stub.
 
 ## Logseq graph
 

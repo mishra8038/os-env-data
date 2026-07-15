@@ -1,24 +1,37 @@
 #!/usr/bin/env bash
-# Idempotent: ensure ~/z/env/ai points at this repo's ai/ tree when present.
-# Obsidian: ~/z/kb/personal/pkb-obsidian-vault-template (not this repo).
+# Idempotent compat wiring for this env-data checkout.
+#
+# ~/z/env/ai is the live AI registry (real directory). Do NOT replace it with
+# a symlink into this repo. The shadowed ai/ tree under this repo was archived
+# 2026-07-15 → ~/z/data/archive/sys-env-data-ai-*.
+#
+# Obsidian templates: ~/z/env/sys-env-data/obsidian/ or sys-obsidian-vault-template.
 set -u
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 Z_ENV="${Z_ENV_ROOT:-$HOME/z/env}"
-TARGET_AI="$REPO_ROOT/ai"
+STUB_AI="$REPO_ROOT/ai"
 COMPAT_OS_DATA="${COMPAT_OS_DATA:-$Z_ENV/os/os-env-data}"
 
 log() { printf '[wire-z-env] %s\n' "$*"; }
 
-if [ ! -d "$TARGET_AI" ]; then
-  log "Skip: $TARGET_AI does not exist (create locally or restore ai/ tree)"
-else
-  if [ -e "$Z_ENV/ai" ] && [ ! -L "$Z_ENV/ai" ]; then
-    log "Refuse: $Z_ENV/ai exists and is not a symlink; merge into $TARGET_AI then re-run"
-    exit 1
+# Live AI registry — never overwrite a real tree.
+if [ -d "$Z_ENV/ai" ] && [ ! -L "$Z_ENV/ai" ]; then
+  log "OK: $Z_ENV/ai is the live AI registry (directory; left unchanged)"
+elif [ -L "$Z_ENV/ai" ]; then
+  target="$(readlink -f "$Z_ENV/ai" 2>/dev/null || true)"
+  if [ "$target" = "$(readlink -f "$STUB_AI" 2>/dev/null)" ]; then
+    log "WARN: $Z_ENV/ai still symlinks to archived stub $STUB_AI"
+    log "       Repoint or replace with live tree under ~/z/env/ai/ (not this stub)."
+  else
+    log "OK: $Z_ENV/ai -> $target"
   fi
-  ln -sfn "$TARGET_AI" "$Z_ENV/ai"
-  log "OK: $Z_ENV/ai -> $TARGET_AI"
+else
+  log "WARN: $Z_ENV/ai missing — restore/create the live AI registry directory"
+fi
+
+if [ -f "$STUB_AI/README.md" ] && [ ! -d "$STUB_AI/claude" ]; then
+  log "Note: $STUB_AI is a redirect stub (ai content archived)"
 fi
 
 mkdir -p "$(dirname "$COMPAT_OS_DATA")" 2>/dev/null || true
@@ -29,5 +42,4 @@ else
   log "OK: $COMPAT_OS_DATA -> $REPO_ROOT"
 fi
 
-log "Obsidian template: ~/z/kb/personal/pkb-obsidian-vault-template"
 log "Done."
